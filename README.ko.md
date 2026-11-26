@@ -53,8 +53,8 @@ macOS에서 실행 중인 Coffee Time 1.1.1의 실제 화면입니다. 이미지
     <th>자동 규칙</th>
   </tr>
   <tr>
-    <td><a href="docs/assets/screenshots/controls-ko.jpg"><img src="docs/assets/screenshots/controls-ko.jpg" width="420" alt="Coffee Time — 컨트롤"></a></td>
-    <td><a href="docs/assets/screenshots/rules-ko.jpg"><img src="docs/assets/screenshots/rules-ko.jpg" width="420" alt="Coffee Time — 자동 규칙"></a></td>
+    <td><a href="docs/assets/screenshots/controls-ko.png"><img src="docs/assets/screenshots/controls-ko.png" width="420" alt="Coffee Time — 컨트롤"></a></td>
+    <td><a href="docs/assets/screenshots/rules-ko.png"><img src="docs/assets/screenshots/rules-ko.png" width="420" alt="Coffee Time — 자동 규칙"></a></td>
   </tr>
 </table>
 
