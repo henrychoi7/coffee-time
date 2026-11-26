@@ -43,6 +43,23 @@ Coffee Time lives in your menu bar. Use it for a long download, a presentation, 
 
 <br>
 
+## Screenshots
+
+Captured from Coffee Time 1.1.1 running on macOS. Click an image for the full-size view.
+
+<table>
+  <tr>
+    <th>Controls</th>
+    <th>Automatic rules</th>
+  </tr>
+  <tr>
+    <td><a href="docs/assets/screenshots/controls-en.jpg"><img src="docs/assets/screenshots/controls-en.jpg" width="420" alt="Coffee Time — Controls"></a></td>
+    <td><a href="docs/assets/screenshots/rules-en.jpg"><img src="docs/assets/screenshots/rules-en.jpg" width="420" alt="Coffee Time — Automatic rules"></a></td>
+  </tr>
+</table>
+
+<br>
+
 ## Get started
 
 **Apple Silicon · macOS 13 or later**

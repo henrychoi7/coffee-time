@@ -43,6 +43,23 @@ Coffee Time은 메뉴 막대에서 실행되는 작은 앱입니다. 오래 걸�
 
 <br>
 
+## 앱 화면
+
+macOS에서 실행 중인 Coffee Time 1.1.1의 실제 화면입니다. 이미지를 클릭하면 원본 크기로 볼 수 있습니다.
+
+<table>
+  <tr>
+    <th>컨트롤</th>
+    <th>자동 규칙</th>
+  </tr>
+  <tr>
+    <td><a href="docs/assets/screenshots/controls-ko.jpg"><img src="docs/assets/screenshots/controls-ko.jpg" width="420" alt="Coffee Time — 컨트롤"></a></td>
+    <td><a href="docs/assets/screenshots/rules-ko.jpg"><img src="docs/assets/screenshots/rules-ko.jpg" width="420" alt="Coffee Time — 자동 규칙"></a></td>
+  </tr>
+</table>
+
+<br>
+
 ## 시작하기
 
 **Apple Silicon · macOS 13 이상**
@@ -110,7 +127,7 @@ Intel Mac은 지원하지 않습니다.
 
 실행할 때와 매시간 GitHub의 정식 릴리스를 확인합니다. 새 버전이 있으면 내려받아 서명을 확인하고 설치한 뒤, **모드와 타이머를 유지한 채 다시 실행**합니다.
 
-바로 확인하려면 **업데이트 확인…**을 선택하세요. 수동으로 업데이트하고 싶다면 설정에서 **새 버전을 자동으로 받아 설치**를 끄세요.
+바로 확인하려면 <strong>업데이트 확인…</strong>을 선택하세요. 수동으로 업데이트하고 싶다면 설정에서 **새 버전을 자동으로 받아 설치**를 끄세요.
 
 <details>
 <summary><strong>업데이트 보안과 이전 버전</strong></summary>
@@ -151,6 +168,6 @@ open 'dist/Coffee Time.app'
 
 Coffee Buzz를 더 이상 내려받을 수 없어 Apple Silicon용으로 새로 만들었습니다. 공개된 기능 설명을 참고했으며 원본 코드, 아이콘, 리소스를 가져오지 않았습니다. 원본 실행 파일을 확보하지 못해 세부 동작에는 차이가 있을 수 있습니다.
 
-Coffee Time은 **[MIT 라이선스](LICENSE)**로 배포합니다. 저작권 및 라이선스 고지를 유지하면 상업적 이용을 포함해 사용, 수정, 재배포할 수 있습니다.
+Coffee Time은 [MIT 라이선스](LICENSE)로 배포합니다. 저작권 및 라이선스 고지를 유지하면 상업적 이용을 포함해 사용, 수정, 재배포할 수 있습니다.
 
 Sparkle과 포함된 외부 코드는 각자의 라이선스를 따릅니다. [서드파티 고지](THIRD_PARTY_NOTICES.txt)에서 확인할 수 있습니다.
