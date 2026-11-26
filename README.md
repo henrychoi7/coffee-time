@@ -1,72 +1,74 @@
 # Coffee Time
 
-Coffee Time은 Mac을 필요한 동안 깨어 있게 해 주는 작은 메뉴 막대 앱입니다. 화면을 계속 켜 두거나, 화면만 끈 채 다운로드와 작업을 이어 갈 수 있습니다.
+**English** | [한국어](README.ko.md)
 
-Apple Silicon Mac과 macOS 13 이상에서 사용할 수 있습니다. Intel Mac은 지원하지 않습니다.
+Coffee Time is a small menu bar app that keeps your Mac awake for as long as you need. Keep the display on, or let it sleep while downloads and other work continue.
 
-## 설치
+Requires an Apple Silicon Mac running macOS 13 or later. Intel Macs are not supported. The app interface is currently in Korean.
 
-[최신 릴리스](https://github.com/henrychoi7/coffee-time/releases/latest)에서 DMG를 받아 열고, Coffee Time을 Applications 폴더로 옮기세요.
+## Install
 
-현재 배포본은 Apple의 Developer ID 서명과 공증을 받지 않았습니다. 처음 실행할 때 macOS가 앱을 차단할 수 있습니다. 저장소에서 직접 받은 파일인지 확인한 뒤 시스템 설정의 개인정보 보호 및 보안에서 실행을 허용할 수 있습니다.
+Download the DMG from the [latest release](https://github.com/henrychoi7/coffee-time/releases/latest), open it, and drag Coffee Time into Applications.
 
-## 자동 업데이트
+The current release is not signed with an Apple Developer ID or notarized. macOS may block it on first launch. After confirming that you downloaded it from this repository, you can allow it to open in **System Settings → Privacy & Security**.
 
-1.1.0부터는 실행할 때와 매시간 GitHub의 정식 릴리스를 확인합니다. 새 버전이 있으면 자동으로 내려받아 서명을 확인하고 설치합니다. 설치 후 앱을 다시 실행하며 사용 중이던 모드와 타이머를 이어갑니다.
+## Automatic updates
 
-메뉴 막대의 **업데이트 확인…**으로 바로 확인할 수 있습니다. 설정에서 **새 버전을 자동으로 받아 설치**를 끄면 수동으로 확인할 때만 업데이트합니다.
+Starting with version 1.1.0, Coffee Time checks GitHub for stable releases at launch and every hour. When an update is available, it downloads the update, verifies its signature, installs it, and relaunches. Your active mode and timer carry over.
 
-업데이트 목록과 파일에는 Sparkle의 Ed25519 서명을 붙입니다. 서명이 맞지 않으면 설치하지 않습니다. 업데이트를 확인할 때 GitHub에 연결하며, 별도의 사용 기록이나 시스템 프로필은 보내지 않습니다.
+Choose **업데이트 확인…** (Check for Updates) from the menu bar to check immediately. Turn off **새 버전을 자동으로 받아 설치** in Settings if you prefer to check and install updates manually.
 
-**1.0.4 이하 버전에는 자동 업데이트가 없습니다.** 먼저 최신 DMG로 한 번 설치해 주세요. 이후 릴리스부터 앱에서 받을 수 있습니다.
+The update feed and archives are signed with Sparkle's Ed25519 signatures. Updates with invalid signatures are rejected. Update checks connect to GitHub; the app does not send usage records or a system profile.
 
-## 사용법
+**Versions 1.0.4 and earlier do not have an updater.** Install the latest DMG once to receive future updates automatically.
 
-메뉴 막대의 커피잔을 클릭하면 모드와 타이머를 선택할 수 있습니다.
+## Use Coffee Time
 
-| 모드 | 동작 |
+Click the coffee cup in the menu bar to choose a mode or set a timer.
+
+| Mode | What it does |
 | --- | --- |
-| Buzz | Mac과 화면을 모두 깨어 있게 유지 |
-| Doze | Mac은 깨어 있게 유지하고 화면은 자동으로 꺼지도록 허용 |
-| Off | macOS의 원래 잠자기 설정을 사용 |
+| Buzz | Keeps your Mac and display awake |
+| Doze | Keeps your Mac awake while allowing the display to sleep |
+| Off | Uses your normal macOS sleep settings |
 
-커피잔을 오른쪽 클릭하면 Off → Buzz → Doze 순서로 전환됩니다. 설정에서 이 동작을 끌 수도 있습니다.
+Right-click the coffee cup to cycle through Off → Buzz → Doze. You can turn this shortcut off in Settings.
 
-타이머는 현재 모드를 유지하다가 지정한 시간이 지나면 선택한 모드로 전환합니다. 1분부터 7일까지 설정할 수 있고, 최근 타이머 세 개를 다시 사용할 수 있습니다. 미니 창은 다른 창 위에 표시됩니다.
+A timer keeps the current mode active until the chosen time, then switches to the mode you selected. Timers can run from one minute to seven days, and you can reuse your three most recent timers. The mini window stays above other windows.
 
-- **⌘W**: 창만 닫고 메뉴 막대에서 계속 실행
-- **⌘Q**: 앱을 종료하고 잠자기 방지 해제
+- **⌘W** closes the window and leaves the app running in the menu bar
+- **⌘Q** quits the app and releases its sleep prevention
 
-앱을 종료하면 이 앱이 설정한 잠자기 방지가 해제됩니다. 덮개를 닫거나 Apple 메뉴에서 직접 잠자기를 선택하는 동작은 막지 않습니다. 화면 잠금과 보안 정책도 변경하지 않습니다.
+Quitting releases all sleep prevention set by Coffee Time. The app does not prevent sleep when you close the lid or choose Sleep from the Apple menu. It does not change screen lock settings or security policies.
 
-## 자동 규칙
+## Automatic rules
 
-다음 상황에 맞춰 모드를 바꿀 수 있습니다.
+Rules can switch modes when:
 
-- 전원 어댑터 연결 또는 분리
-- 배터리가 설정한 잔량 이하로 감소
-- 다른 앱 실행 또는 종료
-- 시스템 시작
+- The power adapter is connected or disconnected
+- The battery falls to a chosen level
+- Another app launches or quits
+- The system starts
 
-지연 시간을 0분으로 두면 즉시 적용합니다. 여러 규칙이 같은 이벤트에 해당하면 아래쪽 규칙이 우선합니다. 새 규칙 동작과 수동 모드 변경은 기존 타이머를 대체하거나 취소합니다.
+Set the delay to zero minutes for an immediate switch. If several rules match the same event, the last one in the list takes priority. A new rule action or a manual mode change replaces or cancels the current timer.
 
-전원 상태는 macOS의 변경 알림을 받아 확인합니다. 알림을 등록하지 못한 경우에만 1초마다 확인합니다. 배터리 규칙은 충전 중에는 실행하지 않으며, 잔량이 기준을 넘었다가 다시 내려오면 재실행할 수 있습니다.
+Coffee Time listens for macOS power change notifications. It falls back to checking once a second only if it cannot register for those notifications. Battery rules do not run while charging. They can run again after the battery rises above the threshold and drops back down.
 
-### 시스템 시작 규칙
+### System startup rules
 
-시스템 시작 규칙은 재부팅 후 Coffee Time이 처음 실행될 때 한 번 적용됩니다. **로그인 시 자동 실행**을 켜 두면 로그인 후 자동으로 적용됩니다.
+A startup rule runs once, when Coffee Time first launches after a reboot. Enable **로그인 시 자동 실행** (Launch at Login) to run it automatically after you log in.
 
-같은 부팅에서 앱을 다시 열거나 로그아웃 후 로그인하거나 절전에서 깨어나는 경우에는 반복하지 않습니다. 실행 중 새로 만든 규칙은 다음 재부팅부터 적용됩니다. 로그인 전에는 앱이 실행되지 않습니다.
+Relaunching the app, logging out and back in, or waking from sleep does not run the rule again during the same boot. A startup rule added while the app is running takes effect after the next reboot. Coffee Time does not run before login.
 
-## 알림과 화면 보호
+## Notifications and display protection
 
-모드가 바뀌면 알림에 새 모드와 전환 이유가 표시됩니다. macOS 알림 권한이 필요하며, 집중 모드나 화면 공유 설정에 따라 배너가 숨겨질 수 있습니다.
+When the mode changes, a notification shows the new mode and what triggered the change. Notifications require macOS permission. Focus modes and screen sharing settings may hide banners.
 
-기본 설정에서는 입력 없이 120분이 지나면 Buzz에서 Doze로 전환합니다. 입력 여부 대신 Buzz 시작 후 경과 시간을 기준으로 삼거나, 시간을 15분에서 8시간 사이로 바꿀 수 있습니다. 안전 전환이 실행되면 진행 중인 타이머도 취소됩니다.
+By default, Coffee Time switches from Buzz to Doze after 120 minutes without input. You can use elapsed time in Buzz instead of idle time, or choose a duration from 15 minutes to eight hours. This safety switch also cancels any active timer.
 
-## 직접 빌드하기
+## Build from source
 
-Xcode 또는 macOS SDK가 포함된 Command Line Tools, Python 3가 필요합니다. 첫 빌드에서는 Sparkle 2.10.1을 공식 릴리스에서 내려받고 SHA-256을 확인합니다.
+You need Xcode or Command Line Tools with the macOS SDK, plus Python 3. The first build downloads Sparkle 2.10.1 from its official release and verifies its SHA-256 checksum.
 
 ```sh
 ./scripts/build.sh
@@ -74,10 +76,18 @@ Xcode 또는 macOS SDK가 포함된 Command Line Tools, Python 3가 필요합니
 open 'dist/Coffee Time.app'
 ```
 
-빌드 결과는 `dist/Coffee Time.app`에 생성됩니다. 앱의 설정과 규칙은 로컬 UserDefaults에 저장됩니다. 일반 실행에서는 새 부팅의 시작 규칙이 없다면 Off로 시작합니다. 자동 업데이트로 다시 실행할 때는 이전 모드와 타이머를 복원합니다.
+The app is built at `dist/Coffee Time.app`. Settings and rules are stored locally in UserDefaults. On a normal launch, the app starts in Off unless a startup rule applies. Relaunching after an automatic update restores the previous mode and timer.
 
-## 프로젝트 소개
+See the [changelog](CHANGELOG.md), [testing guide](docs/TESTING.md), and [release guide](docs/RELEASING.md) for more details. These documents are currently in Korean.
 
-Coffee Buzz를 더 이상 내려받을 수 없어 Apple Silicon용으로 새로 만들었습니다. 공개된 기능 설명을 참고했으며 원본 코드, 아이콘, 리소스를 가져오지 않았습니다. 원본 실행 파일을 확보하지 못했으므로 모든 세부 동작이 같다고 보장하지는 않습니다.
+## About the project
 
-변경 사항은 [변경 기록](CHANGELOG.md), 검증 방법은 [테스트 안내](docs/TESTING.md), 배포 방법은 [릴리스 안내](docs/RELEASING.md)에서 볼 수 있습니다. 자동 업데이트에는 [Sparkle](https://sparkle-project.org)을 사용하며, 포함된 라이브러리의 이용 조건은 [서드파티 고지](THIRD_PARTY_NOTICES.txt)에 실었습니다.
+Coffee Time was built for Apple Silicon after Coffee Buzz became unavailable to download. It was written from scratch using publicly available feature descriptions, without copying the original app's code, icons, or resources. The original executable was not available for comparison, so some behavior may differ.
+
+Automatic updates use [Sparkle](https://sparkle-project.org).
+
+## License
+
+Coffee Time is available under the [MIT License](LICENSE). You may use, modify, and redistribute it, including commercially, as long as you retain the copyright and license notices.
+
+Sparkle and its bundled dependencies retain their own licenses. Their notices are included in [THIRD_PARTY_NOTICES.txt](THIRD_PARTY_NOTICES.txt).
