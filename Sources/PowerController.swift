@@ -16,7 +16,7 @@ final class PowerController {
             let result = IOPMAssertionCreateWithName(type as CFString, IOPMAssertionLevel(kIOPMAssertionLevelOn), "Coffee Time — \(mode.title)" as CFString, &id)
             guard result == kIOReturnSuccess else {
                 newIDs.forEach { IOPMAssertionRelease($0) }
-                throw NSError(domain: "CoffeeTime.Power", code: Int(result), userInfo: [NSLocalizedDescriptionKey: "잠자기 방지를 활성화하지 못했습니다 (\(result))."])
+                throw NSError(domain: "CoffeeTime.Power", code: Int(result), userInfo: [NSLocalizedDescriptionKey: L10n.format("Could not prevent sleep (error %ld).", Int(result))])
             }
             newIDs.append(id)
         }

@@ -9,9 +9,9 @@
 	<key>CFBundleIdentifier</key>
 	<string>local.coffeetime.app</string>
 	<key>CFBundleVersion</key>
-	<string>1100</string>
+	<string>1101</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.1.0</string>
+	<string>1.1.1</string>
 	<key>CFBundleExecutable</key>
 	<string>CoffeeTime</string>
 	<key>CFBundlePackageType</key>
@@ -27,9 +27,10 @@
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 	<key>CFBundleDevelopmentRegion</key>
-	<string>ko</string>
+	<string>en</string>
 	<key>CFBundleLocalizations</key>
 	<array>
+		<string>en</string>
 		<string>ko</string>
 	</array>
 	<key>SUFeedURL</key>

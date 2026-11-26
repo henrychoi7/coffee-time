@@ -9,7 +9,7 @@ import ServiceManagement
     @Published private(set) var session: SessionTimer?
     @Published private(set) var now = Date()
     @Published private(set) var power: PowerSnapshot?
-    @Published var message = "준비됐어요. 커피 한 잔처럼 가볍게 시작하세요."
+    @Published var message = L10n.text("Ready when you are")
     @Published var error: String?
     @Published var loginEnabled = false
     private let controller = PowerController()
@@ -57,7 +57,7 @@ import ServiceManagement
         if let data = try? JSONEncoder().encode(settings) { defaults.set(data, forKey: "CoffeeTime.Settings.v1") }
         statusChanged?()
     }
-    @discardableResult func setMode(_ newMode: CoffeeMode, reason: String = "직접 변경", cancelTimer: Bool = true) -> Bool {
+    @discardableResult func setMode(_ newMode: CoffeeMode, reason: String = L10n.text("Manual change"), cancelTimer: Bool = true) -> Bool {
         let previousMode = mode
         do { try controller.apply(newMode) }
         catch { self.error = error.localizedDescription; return false }
@@ -70,29 +70,29 @@ import ServiceManagement
         return true
     }
     func startTimer(minutes: Int, target: CoffeeMode) {
-        guard (1...10080).contains(minutes) else { error = "타이머는 1분부터 7일까지 설정할 수 있습니다."; return }
+        guard (1...10080).contains(minutes) else { error = L10n.text("Set a timer between one minute and seven days."); return }
         session = SessionTimer(deadline: Date().addingTimeInterval(Double(minutes) * 60), target: target)
         now = Date()
         let preset = TimerPreset(minutes: minutes, target: target)
         settings.recentTimers.removeAll { $0 == preset }
         settings.recentTimers.insert(preset, at: 0)
         settings.recentTimers = Array(settings.recentTimers.prefix(3))
-        message = "\(minutes)분 후 \(target.title)로 전환합니다."
+        message = L10n.format("Switch to %@ in %ld min", target.title, minutes)
         statusChanged?()
     }
-    func cancelTimer() { session = nil; message = "타이머를 취소했습니다."; statusChanged?() }
+    func cancelTimer() { session = nil; message = L10n.text("Timer canceled"); statusChanged?() }
     func tick(at date: Date = Date()) {
         now = date
         if let active = session, active.isDue(at: now) {
             session = nil
-            _ = setMode(active.target, reason: "타이머 완료")
+            _ = setMode(active.target, reason: L10n.text("Timer finished"))
         }
         if mode == .buzz, settings.safetyEnabled, let began = buzzStarted {
             let elapsed = now.timeIntervalSince(began)
             let idle = CGEventSource.secondsSinceLastEventType(.combinedSessionState, eventType: .null)
             let duration = settings.safetyUsesIdle ? min(elapsed, idle) : elapsed
             if duration >= Double(settings.safetyMinutes) * 60 {
-                _ = setMode(.doze, reason: "화면 보호 자동 전환")
+                _ = setMode(.doze, reason: L10n.text("Display protection"))
             }
         }
         // Only fall back to the existing 1-second tick if notification registration failed.
@@ -129,7 +129,7 @@ import ServiceManagement
         if enabled {
             UNUserNotificationCenter.current().requestAuthorization(options: [.alert]) { granted, error in
                 Task { @MainActor in
-                    if !granted { self.settings.notifications = false; self.error = error?.localizedDescription ?? "시스템 설정 → 알림 → Coffee Time에서 알림을 허용한 뒤 다시 켜 주세요." }
+                    if !granted { self.settings.notifications = false; self.error = error?.localizedDescription ?? L10n.text("Allow notifications for Coffee Time in System Settings → Notifications, then try again.") }
                 }
             }
         }
@@ -137,7 +137,7 @@ import ServiceManagement
     private func notifyMode(_ mode: CoffeeMode, previous: CoffeeMode, reason: String) {
         guard settings.notifications else { return }
         let content = UNMutableNotificationContent()
-        content.title = "\(mode.title) 모드"
+        content.title = L10n.format("%@ mode", mode.title)
         content.subtitle = previous == mode ? reason : "\(previous.title) → \(mode.title) · \(reason)"
         content.body = mode.detail
         content.threadIdentifier = "coffee-time-mode-changes"
@@ -145,7 +145,7 @@ import ServiceManagement
         if let notificationSink { notificationSink(request); return }
         UNUserNotificationCenter.current().add(request) { [weak self] error in
             guard let error else { return }
-            Task { @MainActor in self?.error = "모드는 변경됐지만 알림을 표시하지 못했습니다: \(error.localizedDescription)" }
+            Task { @MainActor in self?.error = L10n.format("The mode changed, but the notification could not be shown: %@", error.localizedDescription) }
         }
     }
     func refreshLogin() { loginEnabled = SMAppService.mainApp.status == .enabled }
@@ -175,7 +175,7 @@ import ServiceManagement
               state.canRestore(build: build, boot: boot, at: date) else { return false }
         let expired = state.deadline.map { $0 <= date } ?? false
         let restoredMode = expired ? state.timerTarget ?? state.mode : state.mode
-        guard setMode(restoredMode, reason: "업데이트 후 다시 시작") else { return false }
+        guard setMode(restoredMode, reason: L10n.text("Resumed after update")) else { return false }
         if !expired, let deadline = state.deadline, let target = state.timerTarget {
             session = SessionTimer(deadline: deadline, target: target)
         }

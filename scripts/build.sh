@@ -10,6 +10,7 @@ xcrun swiftc -O -swift-version 5 -target arm64-apple-macos13.0 Sources/*.swift \
   -framework AppKit -framework SwiftUI -framework IOKit -framework UserNotifications -framework ServiceManagement
 ditto .cache/sparkle/Sparkle.framework "$app/Contents/Frameworks/Sparkle.framework"
 cp Resources/Info.plist "$app/Contents/Info.plist"
+for localization in Resources/*.lproj; do ditto "$localization" "$app/Contents/Resources/$(basename "$localization")"; done
 cp Resources/AppIcon.icns "$app/Contents/Resources/"
 cp LICENSE THIRD_PARTY_NOTICES.txt "$app/Contents/Resources/"
 # Overrides are used only for testing an update from an older build.

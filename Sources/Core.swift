@@ -6,9 +6,9 @@ enum CoffeeMode: String, Codable, CaseIterable, Identifiable {
     var title: String { switch self { case .buzz: "Buzz"; case .doze: "Doze"; case .off: "Off" } }
     var symbol: String { switch self { case .buzz: "cup.and.saucer.fill"; case .doze: "moon.zzz.fill"; case .off: "power" } }
     var detail: String { switch self {
-    case .buzz: "Mac과 화면을 모두 깨어 있게 유지합니다."
-    case .doze: "Mac은 깨어 있고, 화면은 자동으로 꺼질 수 있습니다."
-    case .off: "macOS의 기본 잠자기 설정을 따릅니다."
+    case .buzz: L10n.text("Keeps your Mac and display awake.")
+    case .doze: L10n.text("Keeps your Mac awake while letting the display sleep.")
+    case .off: L10n.text("Uses your normal macOS sleep settings.")
     } }
     var next: CoffeeMode { switch self { case .off: .buzz; case .buzz: .doze; case .doze: .off } }
 }
@@ -16,9 +16,9 @@ enum RuleTrigger: String, Codable, CaseIterable, Identifiable {
     case powerConnected, powerDisconnected, lowBattery, appLaunched, appQuit, systemStarted
     var id: String { rawValue }
     var title: String { switch self {
-    case .powerConnected: "전원 어댑터 연결"; case .powerDisconnected: "전원 어댑터 분리"
-    case .lowBattery: "배터리가 기준 이하로 내려가면"; case .appLaunched: "다른 앱 실행"; case .appQuit: "다른 앱 종료"
-    case .systemStarted: "시스템 시작 시"
+    case .powerConnected: L10n.text("Power adapter connected"); case .powerDisconnected: L10n.text("Power adapter disconnected")
+    case .lowBattery: L10n.text("Battery falls to a set level"); case .appLaunched: L10n.text("Another app launches"); case .appQuit: L10n.text("Another app quits")
+    case .systemStarted: L10n.text("System startup")
     } }
 }
 struct CoffeeRule: Codable, Identifiable, Equatable {

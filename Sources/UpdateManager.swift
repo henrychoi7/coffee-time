@@ -5,7 +5,7 @@ import Sparkle
 @MainActor final class UpdateManager: NSObject, ObservableObject, SPUUpdaterDelegate {
     @Published private(set) var canCheckForUpdates = false
     @Published private(set) var automaticUpdatesEnabled = true
-    @Published private(set) var status = "업데이트를 확인할 준비가 됐습니다."
+    @Published private(set) var status = L10n.text("Ready to check for updates")
     private var controller: SPUStandardUpdaterController!
     private weak var model: CoffeeModel?
     private var pendingVersion: String?
@@ -36,31 +36,31 @@ import Sparkle
 
     func updater(_ updater: SPUUpdater, didFindValidUpdate item: SUAppcastItem) {
         pendingVersion = item.versionString
-        status = "새 버전 \(item.displayVersionString)을 찾았습니다."
+        status = L10n.format("Version %@ is available", item.displayVersionString)
     }
 
-    func updaterDidNotFindUpdate(_ updater: SPUUpdater) { status = "현재 사용할 수 있는 새 업데이트가 없습니다." }
+    func updaterDidNotFindUpdate(_ updater: SPUUpdater) { status = L10n.text("You’re up to date") }
 
     func updater(_ updater: SPUUpdater, didAbortWithError error: Error) {
         pendingVersion = nil
         let failure = error as NSError
         if failure.domain == SUSparkleErrorDomain && failure.code == Int(SUError.noUpdateError.rawValue) {
-            status = "현재 사용할 수 있는 새 업데이트가 없습니다."
+            status = L10n.text("You’re up to date")
         } else {
-            status = "업데이트를 완료하지 못했습니다. 네트워크 연결을 확인한 뒤 다시 시도해 주세요."
+            status = L10n.text("The update could not be completed. Check your connection and try again.")
             NSLog("Coffee Time update failed: %@", failure)
         }
     }
 
     func updater(_ updater: SPUUpdater, willInstallUpdate item: SUAppcastItem) {
         pendingVersion = item.versionString
-        status = "업데이트를 설치하고 있습니다."
+        status = L10n.text("Installing the update…")
     }
 
     func updater(_ updater: SPUUpdater, willInstallUpdateOnQuit item: SUAppcastItem,
                  immediateInstallationBlock install: @escaping () -> Void) -> Bool {
         pendingVersion = item.versionString
-        status = "업데이트를 설치한 뒤 다시 실행합니다."
+        status = L10n.text("Installing the update and restarting…")
         // Schedule outside the delegate callback so Sparkle can finish preparing the install.
         DispatchQueue.main.async { install() }
         return true
