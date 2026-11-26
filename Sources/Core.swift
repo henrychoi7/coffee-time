@@ -75,3 +75,18 @@ func clockText(_ seconds: TimeInterval) -> String {
     if value >= 3600 { return String(format: "%d:%02d:%02d", value / 3600, (value % 3600) / 60, value % 60) }
     return String(format: "%02d:%02d", value / 60, value % 60)
 }
+
+struct UpdateResumeState: Codable {
+    let targetBuild: String
+    let bootIdentifier: String
+    let createdAt: Date
+    let mode: CoffeeMode
+    let deadline: Date?
+    let timerTarget: CoffeeMode?
+    let buzzStarted: Date?
+
+    func canRestore(build: String, boot: String?, at date: Date) -> Bool {
+        let age = date.timeIntervalSince(createdAt)
+        return targetBuild == build && bootIdentifier == boot && age >= 0 && age <= 600
+    }
+}

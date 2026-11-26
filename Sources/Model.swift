@@ -156,6 +156,34 @@ import ServiceManagement
             if loginNeedsApproval { SMAppService.openSystemSettingsLoginItems() }
         } catch { self.error = error.localizedDescription; refreshLogin() }
     }
+    func prepareForUpdateRelaunch(targetBuild: String, at date: Date = Date(), boot: String? = SystemStartup.bootIdentifier()) {
+        guard let boot else { return }
+        let state = UpdateResumeState(targetBuild: targetBuild, bootIdentifier: boot, createdAt: date,
+                                      mode: mode, deadline: session?.deadline, timerTarget: session?.target,
+                                      buzzStarted: buzzStarted)
+        if let data = try? JSONEncoder().encode(state) {
+            defaults.set(data, forKey: "CoffeeTime.UpdateResume.v1")
+        }
+    }
+
+    @discardableResult func restoreAfterUpdate(build: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "",
+                                              at date: Date = Date(), boot: String? = SystemStartup.bootIdentifier()) -> Bool {
+        let key = "CoffeeTime.UpdateResume.v1"
+        guard let data = defaults.data(forKey: key) else { return false }
+        defaults.removeObject(forKey: key)
+        guard let state = try? JSONDecoder().decode(UpdateResumeState.self, from: data),
+              state.canRestore(build: build, boot: boot, at: date) else { return false }
+        let expired = state.deadline.map { $0 <= date } ?? false
+        let restoredMode = expired ? state.timerTarget ?? state.mode : state.mode
+        guard setMode(restoredMode, reason: "업데이트 후 다시 시작") else { return false }
+        if !expired, let deadline = state.deadline, let target = state.timerTarget {
+            session = SessionTimer(deadline: deadline, target: target)
+        }
+        if restoredMode == .buzz { buzzStarted = state.buzzStarted ?? date }
+        tick(at: date)
+        return true
+    }
+
     func shutdown() {
         tickTimer?.invalidate()
         powerMonitor?.stop()

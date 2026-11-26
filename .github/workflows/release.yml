@@ -1,0 +1,46 @@
+name: Publish release
+on:
+  push:
+    tags: ['v*']
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: '배포할 태그 (예: v1.1.0)'
+        required: true
+permissions:
+  contents: write
+concurrency:
+  group: publish-release
+  cancel-in-progress: false
+jobs:
+  release:
+    runs-on: macos-15
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      RELEASE_TAG: ${{ github.event.release.tag_name || inputs.tag || github.ref_name }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ env.RELEASE_TAG }}
+          persist-credentials: false
+      - name: Check the version and existing release
+        id: release
+        run: |
+          python3 scripts/check-release.py
+      - if: steps.release.outputs.complete != 'true'
+        run: ./scripts/build.sh
+      - if: steps.release.outputs.complete != 'true'
+        run: ./scripts/test.sh
+      - name: Package and sign the update
+        if: steps.release.outputs.complete != 'true'
+        env:
+          SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
+        run: |
+          test -n "$SPARKLE_PRIVATE_KEY"
+          python3 scripts/package-release.py
+      - name: Publish the files
+        if: steps.release.outputs.complete != 'true'
+        run: ./scripts/publish-release.sh "$RELEASE_TAG"

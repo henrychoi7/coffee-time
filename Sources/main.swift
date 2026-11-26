@@ -5,6 +5,7 @@ import notify
 
 @MainActor final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDelegate {
     let model = CoffeeModel()
+    lazy var updates = UpdateManager(model: model)
     var status: NSStatusItem!
     var mainWindow: NSWindow?
     var miniWindow: NSPanel?
@@ -19,13 +20,19 @@ import notify
         updateStatus()
         if model.settings.showWindowAtLaunch { showMain() }
         if model.settings.notifications { model.enableNotifications(true) }
-        model.handleSystemStartup(bootIdentifier: SystemStartup.bootIdentifier())
+        if !model.restoreAfterUpdate() {
+            model.handleSystemStartup(bootIdentifier: SystemStartup.bootIdentifier())
+        }
+        updates.start()
     }
     func installMenu() {
         let menu = NSMenu()
         let app = NSMenuItem(); let submenu = NSMenu()
         let show = NSMenuItem(title: "Coffee Time 열기", action: #selector(showMain), keyEquivalent: "0"); show.target = self
-        submenu.addItem(show); submenu.addItem(.separator())
+        submenu.addItem(show)
+        let update = NSMenuItem(title: "업데이트 확인…", action: #selector(checkForUpdates), keyEquivalent: "")
+        update.target = self; submenu.addItem(update)
+        submenu.addItem(.separator())
         submenu.addItem(NSMenuItem(title: "Coffee Time 종료", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
         app.submenu = submenu; menu.addItem(app)
         let file = NSMenuItem(title: "파일", action: nil, keyEquivalent: "")
@@ -71,6 +78,9 @@ import notify
             let item = NSMenuItem(title: title, action: action, keyEquivalent: ""); item.target = self; menu.addItem(item)
         }
         menu.addItem(.separator())
+        let updateItem = NSMenuItem(title: "업데이트 확인…", action: #selector(checkForUpdates), keyEquivalent: "")
+        updateItem.target = self; updateItem.isEnabled = updates.canCheckForUpdates
+        menu.addItem(updateItem)
         menu.addItem(NSMenuItem(title: "Coffee Time 종료", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
         status.menu = menu; status.button?.performClick(nil); status.menu = nil
     }
@@ -85,12 +95,13 @@ import notify
     @objc func selectMode(_ sender: NSMenuItem) { if let raw = sender.representedObject as? String, let mode = CoffeeMode(rawValue: raw) { model.setMode(mode) } }
     @objc func timerPreset(_ sender: NSMenuItem) { model.startTimer(minutes: sender.tag, target: .off) }
     @objc func recentPreset(_ sender: NSMenuItem) { if let preset = sender.representedObject as? TimerPreset { model.startTimer(minutes: preset.minutes, target: preset.target) } }
+    @objc func checkForUpdates() { updates.checkForUpdates() }
     @objc func cancelTimer() { model.cancelTimer() }
     @objc func showMain() {
         if mainWindow == nil {
             let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 540, height: 650), styleMask: [.titled, .closable, .miniaturizable], backing: .buffered, defer: false)
             window.title = "Coffee Time"; window.isReleasedWhenClosed = false
-            window.contentView = NSHostingView(rootView: CoffeeView(model: model, showMini: { [weak self] in self?.showMini() }))
+            window.contentView = NSHostingView(rootView: CoffeeView(model: model, updates: updates, showMini: { [weak self] in self?.showMini() }))
             window.center(); mainWindow = window
         }
         miniWindow?.orderOut(nil)
@@ -272,6 +283,28 @@ if CommandLine.arguments.contains("--integration-test") {
         model.handleSystemStartup(bootIdentifier: "")
         model.tick()
         check(model.mode == .off, "unknown boot and routine ticks do not trigger startup rule")
+        model.settings.rules = []
+        model.setMode(.buzz)
+        model.startTimer(minutes: 30, target: .off)
+        let savedDeadline = model.session?.deadline
+        let updateDate = Date()
+        model.prepareForUpdateRelaunch(targetBuild: "1100", at: updateDate, boot: "update-test-boot")
+        let updatedModel = CoffeeModel(defaults: defaults, startsMonitoring: false)
+        updatedModel.notificationSink = { _ in }
+        defer { updatedModel.shutdown() }
+        check(updatedModel.restoreAfterUpdate(build: "1100", at: updateDate.addingTimeInterval(2), boot: "update-test-boot"), "successful update resumes once")
+        check(updatedModel.mode == .buzz && updatedModel.session?.deadline == savedDeadline, "update keeps active mode and timer deadline")
+        check(!updatedModel.restoreAfterUpdate(build: "1100", boot: "update-test-boot"), "resume state cannot replay")
+        model.prepareForUpdateRelaunch(targetBuild: "1100", at: updateDate, boot: "update-test-boot")
+        check(!updatedModel.restoreAfterUpdate(build: "1099", at: updateDate, boot: "update-test-boot"), "failed update does not resume in the old version")
+        model.prepareForUpdateRelaunch(targetBuild: "1100", at: updateDate, boot: "update-test-boot")
+        check(!updatedModel.restoreAfterUpdate(build: "1100", at: updateDate, boot: "another-boot"), "update state does not survive reboot")
+        model.prepareForUpdateRelaunch(targetBuild: "1100", at: updateDate, boot: "update-test-boot")
+        check(!updatedModel.restoreAfterUpdate(build: "1100", at: updateDate.addingTimeInterval(601), boot: "update-test-boot"), "stale update state expires")
+        model.startTimer(minutes: 1, target: .off)
+        model.prepareForUpdateRelaunch(targetBuild: "1100", at: updateDate, boot: "update-test-boot")
+        check(updatedModel.restoreAfterUpdate(build: "1100", at: updateDate.addingTimeInterval(65), boot: "update-test-boot") && updatedModel.mode == .off && updatedModel.session == nil, "timer that expires during an update completes on relaunch")
+        model.setMode(.off)
         print("\(checks)/\(checks) integration checks passed")
     }
     exit(0)

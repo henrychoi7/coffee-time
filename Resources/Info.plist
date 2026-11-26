@@ -1,18 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0"><dict>
-<key>CFBundleName</key><string>Coffee Time</string>
-<key>CFBundleDisplayName</key><string>Coffee Time</string>
-<key>CFBundleIdentifier</key><string>local.coffeetime.app</string>
-<key>CFBundleVersion</key><string>5</string>
-<key>CFBundleShortVersionString</key><string>1.0.4</string>
-<key>CFBundleExecutable</key><string>CoffeeTime</string>
-<key>CFBundlePackageType</key><string>APPL</string>
-<key>CFBundleIconFile</key><string>AppIcon</string>
-<key>LSMinimumSystemVersion</key><string>13.0</string>
-<key>LSUIElement</key><true/>
-<key>NSHighResolutionCapable</key><true/>
-<key>NSPrincipalClass</key><string>NSApplication</string>
-<key>CFBundleDevelopmentRegion</key><string>ko</string>
-<key>CFBundleLocalizations</key><array><string>ko</string></array>
-</dict></plist>
+<plist version="1.0">
+<dict>
+	<key>CFBundleName</key>
+	<string>Coffee Time</string>
+	<key>CFBundleDisplayName</key>
+	<string>Coffee Time</string>
+	<key>CFBundleIdentifier</key>
+	<string>local.coffeetime.app</string>
+	<key>CFBundleVersion</key>
+	<string>1100</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.1.0</string>
+	<key>CFBundleExecutable</key>
+	<string>CoffeeTime</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleIconFile</key>
+	<string>AppIcon</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>13.0</string>
+	<key>LSUIElement</key>
+	<true/>
+	<key>NSHighResolutionCapable</key>
+	<true/>
+	<key>NSPrincipalClass</key>
+	<string>NSApplication</string>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>ko</string>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>ko</string>
+	</array>
+	<key>SUFeedURL</key>
+	<string>https://github.com/henrychoi7/coffee-time/releases/latest/download/appcast.xml</string>
+	<key>SUPublicEDKey</key>
+	<string>hHzWGxkbrtl7u3TuB9NOhV40nnx1PRuc9QOOLgHMK0Y=</string>
+	<key>SUEnableAutomaticChecks</key>
+	<true/>
+	<key>SUAutomaticallyUpdate</key>
+	<true/>
+	<key>SUScheduledCheckInterval</key>
+	<integer>3600</integer>
+	<key>SUVerifyUpdateBeforeExtraction</key>
+	<true/>
+	<key>SURequireSignedFeed</key>
+	<true/>
+	<key>SUSignedFeedFailureExpirationInterval</key>
+	<integer>0</integer>
+	<key>SUEnableSystemProfiling</key>
+	<false/>
+</dict>
+</plist>

@@ -6,6 +6,7 @@ private let canvas = Color(nsColor: .windowBackgroundColor)
 
 struct CoffeeView: View {
     @ObservedObject var model: CoffeeModel
+    @ObservedObject var updates: UpdateManager
     var showMini: () -> Void
     @State private var page = 0
     @State private var minutes = 30
@@ -16,7 +17,7 @@ struct CoffeeView: View {
                 Image(systemName: "cup.and.saucer.fill").font(.system(size: 30)).foregroundStyle(coffee)
                 VStack(alignment: .leading, spacing: 3) {
                     Text("Coffee Time").font(.system(size: 25, weight: .semibold, design: .rounded))
-                    Text("잠깐의 커피, 계속되는 작업.").font(.subheadline).foregroundStyle(.secondary)
+                    Text("잠깐의 커피, 계속되는 작업").font(.subheadline).foregroundStyle(.secondary)
                 }
                 Spacer()
                 Button(action: showMini) { Image(systemName: "pip.enter") }.help("항상 위에 표시되는 미니 창")
@@ -141,8 +142,20 @@ struct CoffeeView: View {
                     if model.loginNeedsApproval { Button("시스템 설정에서 로그인 항목 허용") { SMLoginSettings.open() } }
                 }.padding(10)
             }
+            GroupBox {
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("앱 업데이트").font(.headline)
+                    Toggle("새 버전을 자동으로 받아 설치", isOn: Binding(get: { updates.automaticUpdatesEnabled }, set: { updates.setAutomaticUpdates($0) }))
+                    Text("실행할 때와 매시간 새 버전을 확인합니다. 설치 후 다시 실행하며 모드와 타이머를 이어갑니다.").font(.caption).foregroundStyle(.secondary)
+                    HStack {
+                        Text(updates.status).font(.caption).foregroundStyle(.secondary)
+                        Spacer()
+                        Button("업데이트 확인…") { updates.checkForUpdates() }.disabled(!updates.canCheckForUpdates)
+                    }
+                }.padding(10)
+            }
             VStack(alignment: .leading, spacing: 8) {
-                Text("Coffee Time 1.0.4 · Apple Silicon").font(.subheadline.bold())
+                Text("Coffee Time \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "") · Apple Silicon").font(.subheadline.bold())
                 Text("앱을 종료하면 잠자기 방지도 해제됩니다. 기본 시작 모드는 Off이며, 시스템 시작 규칙이 있으면 적용합니다. Mac 덮개 닫기나 직접 잠자기는 막지 않습니다.").font(.caption).foregroundStyle(.secondary)
                 Text("화면 잠금 정책과 시스템 설정은 그대로 유지됩니다.").font(.caption).foregroundStyle(.secondary)
             }
